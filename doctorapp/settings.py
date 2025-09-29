@@ -11,10 +11,15 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from environ import Env
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = Env()
+Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -40,7 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'patients',
     'doctors',
-    'booking',
+    'bookings',
 ]
 
 MIDDLEWARE = [
@@ -77,9 +82,13 @@ WSGI_APPLICATION = 'doctorapp.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": env.str("DJANGO_DB_ENGINE"),
+        "NAME": env.str("DJANGO_DB_NAME"),
+        "USER": env.str("DJANGO_DB_USER"),
+        "PASSWORD": env.str("DJANGO_DB_PASSWORD"),
+        "HOST": env.str("DJANGO_DB_HOST"),
+        "PORT": env.int("DJANGO_DB_PORT"),
     }
 }
 

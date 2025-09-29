@@ -17,17 +17,17 @@ class Appointment(models.Model):
     - __str__: Retorna una representación legible de la cita.
     '''
     STATUS_CHOICES = [
-        ('scheduled', 'Scheduled'),
-        ('completed', 'Completed'),
-        ('canceled', 'Canceled'),
+        ('programada', 'Programada'),
+        ('completada', 'Completada'),
+        ('cancelada', 'Cancelada'),
     ]
 
-    patient = models.ForeignKey('Patient', on_delete=models.CASCADE, related_name='appointments')
-    doctor = models.ForeignKey('Doctor', on_delete=models.CASCADE, related_name='appointments')
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments')
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='appointments')
     appointment_date = models.DateField()
     appointment_time = models.TimeField()
     notes = models.TextField(blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='scheduled')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='programada')
 
     def __str__(self):
         return f"Appointment of {self.patient} with Dr. {self.doctor} on {self.appointment_date} at {self.appointment_time} - Status: {self.status}"
