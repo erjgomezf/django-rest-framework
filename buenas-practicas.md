@@ -364,6 +364,10 @@ serializer.is_valid()
 serializer.save()
 ```
 
+### Postman
+
+> Se puede utilizar postman para verificar la funcionadidad de la Api's, ademas de que puede generar un codigo culs para ejecutar el comando por consola
+
 ### Testing
 
 - **Ejecutar todas las pruebas con pytest:** `python3 -m pytest`
