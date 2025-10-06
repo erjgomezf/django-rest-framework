@@ -347,6 +347,23 @@ _Esta sección es tu "chuleta" personal para memorizar y acceder rápidamente a 
 - **Libreria que actua como conectos de Django con el entorno virual de PostgreSQL:** `pip install psycopg2-binary`
 - **Libreria que se utiliza para ocultar la informancion sensible del proyecto:** `pip install python-dotenv`
 
+### APIRest
+
+> Los **serializers** permiten transformar la data en json, en la shell se pueden usar estos comandos;
+
+```bash
+from modelo.serializers import ModeloSerializer
+data = {"clave":"valor"}
+serializer = ModeloSerializer(data=data)
+serializer.is_valid()
+```
+
+> Si serializer.is_valid() = TRUE -> data esta bien definida / de lo contrario, ejecutar -> serializer.errors (para ver errores).
+
+```bash
+serializer.save()
+```
+
 ### Testing
 
 - **Ejecutar todas las pruebas con pytest:** `python3 -m pytest`
