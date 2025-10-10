@@ -192,6 +192,84 @@ Para modularizar: crear carpeta `docs/`, añadir índice al inicio aquí con enl
 
 ---
 
+## 14.1. Uso práctico de Postman para APIs DRF
+
+- Postman permite probar endpoints REST, guardar colecciones y automatizar pruebas manuales.
+- Útil para:
+  - Probar rutas protegidas (añadir headers, tokens, etc.).
+  - Inspeccionar respuestas y errores de validación.
+  - Extraer código cURL: botón "Code" > copiar como cURL para reproducir peticiones en terminal o scripts.
+  - Documentar ejemplos de requests para el equipo.
+- Buenas prácticas:
+  - Nombrar cada request con verbo y recurso (`GET cursos`, `POST reservas`).
+  - Guardar variables de entorno (host, tokens) para evitar hardcodear.
+  - Versionar la colección si evoluciona la API.
+
+## 14.2. Documentación visual de la API con drf-spectacular
+
+- `drf-spectacular` genera documentación OpenAPI 3.0 interactiva (Swagger UI, Redoc) a partir de tus serializers y rutas DRF.
+- Permite explorar y probar endpoints desde el navegador, útil para frontend y QA.
+
+### Instalación y setup básico
+
+1. Añadir a `requirements.txt`:
+
+```
+drf-spectacular
+```
+
+Luego: `pip install -r requirements.txt` 2. En `settings.py`:
+
+```python
+INSTALLED_APPS += ["drf_spectacular"]
+
+REST_FRAMEWORK = {
+   # ...otras settings...
+   "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+SPECTACULAR_SETTINGS = {
+   "TITLE": "API del Curso DRF",
+   "DESCRIPTION": "Documentación interactiva de la API",
+   "VERSION": "1.0.0",
+}
+```
+
+3. Crear app `docs` (opcional, recomendado para separar lógica):
+
+```bash
+python manage.py startapp docs
+```
+
+Registrar en `INSTALLED_APPS`. 4. En `docs/urls.py` (o en el urls.py central):
+
+```python
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from django.urls import path
+
+urlpatterns = [
+   path("schema/", SpectacularAPIView.as_view(), name="schema"),
+   path("docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+   path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
+]
+```
+
+Luego incluir estas rutas en el `urls.py` principal:
+
+```python
+path("api/", include("docs.urls")),
+```
+
+5. Acceder a la documentación:
+
+- Swagger UI: http://localhost:8000/api/docs/
+- Redoc: http://localhost:8000/api/redoc/
+
+Notas:
+
+- Personaliza títulos y descripciones en `SPECTACULAR_SETTINGS`.
+- Si usas permisos, asegúrate de poder probar endpoints protegidos desde Swagger (puedes añadir autenticación en la UI).
+- La ruta `/api/schema/` expone el esquema OpenAPI en JSON (útil para frontend o integraciones externas).
+
 ## 15. Métodos HTTP (referencia para APIs REST)
 
 Tabla de referencia centrada en semántica, idempotencia y uso esperado en el curso.

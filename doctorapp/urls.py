@@ -19,9 +19,11 @@ from django.urls import path
 from django.urls import include
 from patients.urls import urlpatterns as patient_urls
 from doctors.urls import urlpatterns as doctors_urls
+from docs.urls import urlpatterns as docs_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('patients/', include(patient_urls)),
     path('doctors/', include(doctors_urls)),
+    path('docs/', include(docs_urls)),
 ]

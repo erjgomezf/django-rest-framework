@@ -43,9 +43,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'docs',
     'patients',
     'doctors',
     'bookings',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -143,3 +145,8 @@ REST_FRAMEWORK = {
     ]
 }
 '''
+
+REST_FRAMEWORK = {
+    # YOUR SETTINGS
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
