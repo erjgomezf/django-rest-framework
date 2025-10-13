@@ -4,8 +4,12 @@ URL configuration doctors app
 
 from django.urls import path
 from doctors.views import ListDoctorsView, DetailDoctorView
+from rest_framework.routers import DefaultRouter
+from .viewsets import DoctorViewSet
 
-urlpatterns = [
-    path('api/list_doctors/', ListDoctorsView.as_view()),
-    path('api/detail_doctor/<int:pk>/', DetailDoctorView.as_view()),
-]
+
+router = DefaultRouter()
+router.register(r"list_doctors", DoctorViewSet, basename="doctors")
+
+
+urlpatterns = router.urls

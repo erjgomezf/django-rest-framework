@@ -25,6 +25,7 @@ class Doctor(models.Model):
     address = models.TextField()
     biography = models.TextField(blank=True)
     specialty = models.CharField(max_length=100)
+    is_on_vacation = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Dr. {self.first_name} {self.last_name} - {self.specialty}"
