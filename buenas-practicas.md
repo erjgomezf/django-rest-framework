@@ -57,6 +57,22 @@ Aunque nuestro foco inicial es el backend, sentaremos las bases para un frontend
 - Commits: un concepto por commit, mensaje imperativo claro.
 - Evitar “comentarios de excusa”; si el código necesita explicación extensa, reconsiderar la implementación.
 
+### 4.1. Comentarios y Docstrings Estructurados
+
+- **Propósito:** Escribir docstrings que no solo sean legibles para humanos, sino también interpretables por herramientas automáticas (como asistentes de código o generadores de documentación).
+- **Formato recomendado (estilo reStructuredText/Sphinx simplificado):**
+
+  - Usar comillas triples `'''Docstring aquí'''`.
+  - Una descripción breve en la primera línea.
+  - Usar `*` para definir secciones claras como `* Atributos:`, `* Métodos:`, `* Parámetros:`.
+  - Usar `-` para listar los elementos dentro de cada sección.
+
+- **Ejemplo práctico:**
+  ```python
+  class MiVista(APIView):
+      '''Vista para gestionar los perfiles de usuario.'''
+  ```
+
 ## 5. Estrategia de Validación
 
 - Tests de unidad para lógica pura y transformaciones (serializers, helpers, servicios).
@@ -166,33 +182,9 @@ Puntos didácticos del ejemplo:
 
 Reglas: usar el código más específico; no envolver respuesta en claves arbitrarias tipo `{"success":true}` salvo estándar global.
 
-## 13. Convenciones de Naming
+## 13. Herramientas para la API
 
-| Tipo        | Convención                                  | Ejemplo                   |
-| ----------- | ------------------------------------------- | ------------------------- |
-| Modelos     | Singular PascalCase                         | Curso, UsuarioPerfil      |
-| Serializers | PascalCase + Sufijo Serializer              | CursoSerializer           |
-| ViewSets    | PascalCase + Sufijo ViewSet                 | CursoViewSet              |
-| Campos bool | prefijo `es_` / `tiene_` / adjetivo directo | publicado, es_activo      |
-| Rutas       | plural snake / kebab según contexto         | cursos, cursos-publicados |
-| Funciones   | snake_case descriptivo                      | generar_token_reset       |
-| Tests       | prefijo test\_ + verbo/condición            | test_crea_curso_ok        |
-
-Principio: el nombre debe comunicar intención sin necesitar comentario adicional.
-
-## 14. Modularización de Apéndices (futuro)
-
-Si el archivo crece demasiado:
-
-- Mover comandos a `docs/comandos.md`.
-- Mover patrones a `docs/patrones.md`.
-- Mantener este archivo como índice curado.
-
-Para modularizar: crear carpeta `docs/`, añadir índice al inicio aquí con enlaces relativos y anotar en cada subarchivo fecha de última revisión.
-
----
-
-## 14.1. Uso práctico de Postman para APIs DRF
+### 13.1. Pruebas manuales con Postman
 
 - Postman permite probar endpoints REST, guardar colecciones y automatizar pruebas manuales.
 - Útil para:
@@ -205,72 +197,49 @@ Para modularizar: crear carpeta `docs/`, añadir índice al inicio aquí con enl
   - Guardar variables de entorno (host, tokens) para evitar hardcodear.
   - Versionar la colección si evoluciona la API.
 
-## 14.2. Documentación visual de la API con drf-spectacular
+### 13.2. Documentación automática con drf-spectacular
 
 - `drf-spectacular` genera documentación OpenAPI 3.0 interactiva (Swagger UI, Redoc) a partir de tus serializers y rutas DRF.
 - Permite explorar y probar endpoints desde el navegador, útil para frontend y QA.
 
-### Instalación y setup básico
+#### Instalación y setup básico
 
-1. Añadir a `requirements.txt`:
+1.  Añadir a `requirements.txt` y luego `pip install -r requirements.txt`: `drf-spectacular`
+2.  En `settings.py`:
 
-```
-drf-spectacular
-```
+    ```python
+    INSTALLED_APPS += ["drf_spectacular"]
 
-Luego: `pip install -r requirements.txt` 2. En `settings.py`:
+    REST_FRAMEWORK = {
+       # ...otras settings...
+       "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    }
+    SPECTACULAR_SETTINGS = {
+       "TITLE": "API del Curso DRF",
+       "DESCRIPTION": "Documentación interactiva de la API",
+       "VERSION": "1.0.0",
+    }
+    ```
 
-```python
-INSTALLED_APPS += ["drf_spectacular"]
+3.  En `urls.py` del proyecto, añadir las rutas para la UI:
 
-REST_FRAMEWORK = {
-   # ...otras settings...
-   "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-}
-SPECTACULAR_SETTINGS = {
-   "TITLE": "API del Curso DRF",
-   "DESCRIPTION": "Documentación interactiva de la API",
-   "VERSION": "1.0.0",
-}
-```
+    ```python
+    # urls.py (proyecto)
+    from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
-3. Crear app `docs` (opcional, recomendado para separar lógica):
+    urlpatterns = [
+        # ... otras rutas ...
+        path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+        path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+        path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
+    ]
+    ```
 
-```bash
-python manage.py startapp docs
-```
+4.  Acceder a la documentación en:
+    - Swagger UI: `http://localhost:8000/api/docs/`
+    - Redoc: `http://localhost:8000/api/redoc/`
 
-Registrar en `INSTALLED_APPS`. 4. En `docs/urls.py` (o en el urls.py central):
-
-```python
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
-from django.urls import path
-
-urlpatterns = [
-   path("schema/", SpectacularAPIView.as_view(), name="schema"),
-   path("docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
-   path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
-]
-```
-
-Luego incluir estas rutas en el `urls.py` principal:
-
-```python
-path("api/", include("docs.urls")),
-```
-
-5. Acceder a la documentación:
-
-- Swagger UI: http://localhost:8000/api/docs/
-- Redoc: http://localhost:8000/api/redoc/
-
-Notas:
-
-- Personaliza títulos y descripciones en `SPECTACULAR_SETTINGS`.
-- Si usas permisos, asegúrate de poder probar endpoints protegidos desde Swagger (puedes añadir autenticación en la UI).
-- La ruta `/api/schema/` expone el esquema OpenAPI en JSON (útil para frontend o integraciones externas).
-
-## 15. Métodos HTTP (referencia para APIs REST)
+## 14. Métodos HTTP (referencia para APIs REST)
 
 Tabla de referencia centrada en semántica, idempotencia y uso esperado en el curso.
 
@@ -296,7 +265,43 @@ Guía pragmática para el curso:
 - POST para crear; PATCH para modificaciones parciales; PUT sólo si se gestiona un reemplazo completo coherente.
 - Evitar duplicar semántica (no tener a la vez PATCH y acciones POST que hagan el mismo ajuste).
 
+## 15. Convenciones de Naming
+
+| Código | Uso en este curso                                      | Ejemplo de disparador      |
+| ------ | ------------------------------------------------------ | -------------------------- |
+| 200    | Lecturas exitosas (GET detail)                         | GET /cursos/1/             |
+| 201    | Creación exitosa                                       | POST /cursos/              |
+| 204    | Eliminación sin cuerpo                                 | DELETE /cursos/1/          |
+| 400    | Validación de datos fallida                            | Campo obligatorio faltante |
+| 401    | No autenticado (cuando se añada auth)                  | Token ausente              |
+| 403    | Autenticado pero sin permiso                           | Rol sin acceso             |
+| 404    | Recurso no encontrado                                  | ID inexistente             |
+| 409    | Conflicto lógico (evitar duplicados o estado inválido) | Ej. publicar dos veces     |
+| 500    | Error no controlado                                    | Excepción no capturada     |
+
+Reglas: usar el código más específico; no envolver respuesta en claves arbitrarias tipo `{"success":true}` salvo estándar global.
+
+| Tipo        | Convención                                  | Ejemplo                   |
+| ----------- | ------------------------------------------- | ------------------------- |
+| Modelos     | Singular PascalCase                         | Curso, UsuarioPerfil      |
+| Serializers | PascalCase + Sufijo Serializer              | CursoSerializer           |
+| ViewSets    | PascalCase + Sufijo ViewSet                 | CursoViewSet              |
+| Campos bool | prefijo `es_` / `tiene_` / adjetivo directo | publicado, es_activo      |
+| Rutas       | plural snake / kebab según contexto         | cursos, cursos-publicados |
+| Funciones   | snake_case descriptivo                      | generar_token_reset       |
+| Tests       | prefijo test\_ + verbo/condición            | test_crea_curso_ok        |
+
+Principio: el nombre debe comunicar intención sin necesitar comentario adicional.
+
 ## 16. Modelos Arquitectónicos en el Ecosistema Python
+
+Si el archivo crece demasiado:
+
+- Mover comandos a `docs/comandos.md`.
+- Mover patrones a `docs/patrones.md`.
+- Mantener este archivo como índice curado.
+
+Para modularizar: crear carpeta `docs/`, añadir índice al inicio aquí con enlaces relativos y anotar en cada subarchivo fecha de última revisión.
 
 Panorama de modelos y cuándo importan. Mantener simplicidad mientras no haya complejidad real de dominio.
 
@@ -358,6 +363,16 @@ Separación de modelos de lectura y escritura. Aplazar hasta que el volumen de q
 Regla general: diferir complejidad arquitectónica hasta tener un caso real; documentar el motivo de cada salto de abstracción.
 
 ---
+
+## 17. Modularización de Apéndices (futuro)
+
+Si el archivo crece demasiado:
+
+- Mover comandos a `docs/comandos.md`.
+- Mover patrones a `docs/patrones.md`.
+- Mantener este archivo como índice curado.
+
+## Para modularizar: crear carpeta `docs/`, añadir índice al inicio aquí con enlaces relativos y anotar en cada subarchivo fecha de última revisión.
 
 ## Apéndice A: Guía Rápida de Comandos
 
