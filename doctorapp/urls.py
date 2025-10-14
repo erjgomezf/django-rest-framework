@@ -23,6 +23,7 @@ from docs.urls import urlpatterns as docs_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api-auth/', include('rest_framework.urls')),
     path('patients/', include(patient_urls)),
     path('doctors/', include(doctors_urls)),
     path('docs/', include(docs_urls)),

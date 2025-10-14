@@ -28,7 +28,7 @@ class PatientViewSet(viewsets.ModelViewSet):
         '''
         if self.action == 'add_medical_record':
             return MedicalRecordSerializer
-        return super().get_serializer_class()
+        return super().get_serializer_class() # Retorna el serializador por defecto
 
     #Actions personalizado para agregar un nuevo historial medico
     @action(detail=True, methods=["post"], url_path="add-medical-record")
@@ -36,12 +36,12 @@ class PatientViewSet(viewsets.ModelViewSet):
         '''
         Agrega un nuevo historial médico a un paciente existente.
 
-        Parámetros:
-        - request: Objeto de solicitud HTTP que contiene los datos del historial médico.
-        - pk: ID del paciente al que se le agregará el historial médico.
+        * Parámetros:
+            - request: Objeto de solicitud HTTP que contiene los datos del historial médico.
+            - pk: ID del paciente al que se le agregará el historial médico.
 
-        Retorna:
-        - Response: Objeto de respuesta HTTP con el historial médico creado o errores de validación.
+        * Retorna:
+            - Response: Objeto de respuesta HTTP con el historial médico creado o errores de validación.
         '''
         patient = self.get_object()
         # Obtenemos el serializador a través del método que ya hemos definido
@@ -55,11 +55,11 @@ class PatientViewSet(viewsets.ModelViewSet):
     def medical_record(self, request, pk) -> Response:
         '''
         Recupera el historial médico de un paciente específico.
-        Parámetros:
-        - request: Objeto de solicitud HTTP.
-        - pk: ID del paciente cuyo historial médico se va a recuperar.
-        Retorna:
-        - Response: Objeto de respuesta HTTP con los datos del historial médico del paciente.
+        * Parámetros:
+            - request: Objeto de solicitud HTTP.
+            - pk: ID del paciente cuyo historial médico se va a recuperar.
+        * Retorna:
+            - Response: Objeto de respuesta HTTP con los datos del historial médico del paciente.
         '''
         patient = self.get_object()
         medical_records = patient.medical_records.all()
