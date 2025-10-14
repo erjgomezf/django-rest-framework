@@ -19,25 +19,37 @@ class PatientViewSet(viewsets.ModelViewSet):
     '''
     serializer_class = PatientSerializer
     queryset = Patient.objects.all()
-    
+
+    def get_serializer_class(self):
+        '''
+        Retorna el serializador apropiado según la acción.
+        - Para `add_medical_record`, usa `MedicalRecordSerializer`.
+        - Para el resto, usa el `PatientSerializer` por defecto.
+        '''
+        if self.action == 'add_medical_record':
+            return MedicalRecordSerializer
+        return super().get_serializer_class()
+
     #Actions personalizado para agregar un nuevo historial medico
-    @action(["POST", "GET"], detail=True, url_path="add-medical-record")
+    @action(detail=True, methods=["post"], url_path="add-medical-record")
     def add_medical_record(self, request, pk) -> Response:
         '''
         Agrega un nuevo historial médico a un paciente existente.
+
         Parámetros:
         - request: Objeto de solicitud HTTP que contiene los datos del historial médico.
         - pk: ID del paciente al que se le agregará el historial médico.
+
         Retorna:
         - Response: Objeto de respuesta HTTP con el historial médico creado o errores de validación.
         '''
         patient = self.get_object()
-        serializer = MedicalRecordSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(patient=patient)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+        # Obtenemos el serializador a través del método que ya hemos definido
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(patient=patient)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     #Action personalizado para mostrar el historial medico del paciente en formato JSON
     @action(["GET"], detail=True, url_path="medical-record")
     def medical_record(self, request, pk) -> Response:

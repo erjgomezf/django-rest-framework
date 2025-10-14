@@ -41,4 +41,15 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
     '''
     class Meta:
         model = MedicalRecord
-        fields = '__all__'
+        # Definimos explícitamente los campos para tener más control.
+        fields = [
+            'id', 
+            'patient', 
+            'date', 
+            'diagnosis', 
+            'treatment', 
+            'follow_up_date'
+        ]
+        # El paciente se asigna desde la URL, no debe ser editable en el formulario.
+        # La fecha se añade automáticamente.
+        read_only_fields = ['id', 'patient', 'date']
