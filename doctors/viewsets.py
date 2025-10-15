@@ -1,10 +1,12 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .serializers import DoctorSerializer
 from .models import Doctor
+from .permissions import IsDoctor
+
 
 # Create your views here.
 
@@ -21,7 +23,9 @@ class DoctorViewSet(viewsets.ModelViewSet):
     '''
     serializer_class = DoctorSerializer
     queryset = Doctor.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsDoctor]
+    #permission_classes = [IsAuthenticatedOrReadOnly] # Permite solo a usuarios autenticados crear, actualizar o eliminar
+    # permission_classes = [IsAuthenticated] # Permite solo a usuarios autenticados crear, actualizar o eliminar
 
     @action(["POST"], detail=True, url_path="set-on-vacation")
     def set_on_vacation(self, request, pk) -> Response:

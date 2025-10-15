@@ -41,10 +41,10 @@ This repository serves as an educational sandbox for building REST APIs with Dja
 
 ## 5. Operational Workflow (for the Agent)
 
-1.  **Contextual Reading:** Review `requirements.txt`, `settings.py`, `urls.py`, and files of the target app before proposing changes.
-2.  **Planning:** For non-trivial tasks, formulate a clear plan and share it if it aids understanding.
-3.  **Execution:** Use the available tools to implement the plan, adhering to project conventions.
-4.  **Verification:** After editing executable code, validate with formatting, existing tests, and a quick server startup if applicable. I will use `black .` for formatting and run tests to ensure changes are safe.
+1. **Contextual Reading:** Review `requirements.txt`, `settings.py`, `urls.py`, and files of the target app before proposing changes.
+2. **Planning:** For non-trivial tasks, formulate a clear plan and share it if it aids understanding.
+3. **Execution:** Use the available tools to implement the plan, adhering to project conventions.
+4. **Verification:** After editing executable code, validate with formatting, existing tests, and a quick server startup if applicable. I will use `black .` for formatting and run tests to ensure changes are safe.
 
 ## 6. Communication
 

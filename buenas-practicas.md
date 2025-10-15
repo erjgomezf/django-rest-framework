@@ -68,6 +68,7 @@ Aunque nuestro foco inicial es el backend, sentaremos las bases para un frontend
   - Usar `-` para listar los elementos dentro de cada sección.
 
 - **Ejemplo práctico:**
+
   ```python
   class MiVista(APIView):
       '''Vista para gestionar los perfiles de usuario.'''
@@ -204,40 +205,40 @@ Reglas: usar el código más específico; no envolver respuesta en claves arbitr
 
 #### Instalación y setup básico
 
-1.  Añadir a `requirements.txt` y luego `pip install -r requirements.txt`: `drf-spectacular`
-2.  En `settings.py`:
+1. Añadir a `requirements.txt` y luego `pip install -r requirements.txt`: `drf-spectacular`
+2. En `settings.py`:
 
-    ```python
-    INSTALLED_APPS += ["drf_spectacular"]
+   ```python
+   INSTALLED_APPS += ["drf_spectacular"]
 
-    REST_FRAMEWORK = {
-       # ...otras settings...
-       "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    }
-    SPECTACULAR_SETTINGS = {
-       "TITLE": "API del Curso DRF",
-       "DESCRIPTION": "Documentación interactiva de la API",
-       "VERSION": "1.0.0",
-    }
-    ```
+   REST_FRAMEWORK = {
+      # ...otras settings...
+      "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+   }
+   SPECTACULAR_SETTINGS = {
+      "TITLE": "API del Curso DRF",
+      "DESCRIPTION": "Documentación interactiva de la API",
+      "VERSION": "1.0.0",
+   }
+   ```
 
-3.  En `urls.py` del proyecto, añadir las rutas para la UI:
+3. En `urls.py` del proyecto, añadir las rutas para la UI:
 
-    ```python
-    # urls.py (proyecto)
-    from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+   ```python
+   # urls.py (proyecto)
+   from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
-    urlpatterns = [
-        # ... otras rutas ...
-        path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-        path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
-        path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
-    ]
-    ```
+   urlpatterns = [
+       # ... otras rutas ...
+       path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+       path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+       path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
+   ]
+   ```
 
-4.  Acceder a la documentación en:
-    - Swagger UI: `http://localhost:8000/api/docs/`
-    - Redoc: `http://localhost:8000/api/redoc/`
+4. Acceder a la documentación en:
+   - Swagger UI: `http://localhost:8000/api/docs/`
+   - Redoc: `http://localhost:8000/api/redoc/`
 
 ## 14. Métodos HTTP (referencia para APIs REST)
 
@@ -372,7 +373,7 @@ Si el archivo crece demasiado:
 - Mover patrones a `docs/patrones.md`.
 - Mantener este archivo como índice curado.
 
-## Para modularizar: crear carpeta `docs/`, añadir índice al inicio aquí con enlaces relativos y anotar en cada subarchivo fecha de última revisión.
+## Para modularizar: crear carpeta `docs/`, añadir índice al inicio aquí con enlaces relativos y anotar en cada subarchivo fecha de última revisión
 
 ## Apéndice A: Guía Rápida de Comandos
 
