@@ -80,6 +80,8 @@ Aunque nuestro foco inicial es el backend, sentaremos las bases para un frontend
 - Tests de integración para endpoints (status + payload clave + permisos mínimos).
 - Usar factories / fixtures simples (no sobre-ingeniería temprana).
 - Prioridad a escenarios edge: campos obligatorios faltantes, tipos incorrectos, ausencia de permisos.
+- **Validaciones a nivel de Serializer:** Centralizar todas las validaciones de datos (nivel de campo, nivel de objeto) en los archivos `serializers.py`. Esto mantiene la lógica de validación contenida y reutilizable, asegurando que ninguna data inválida llegue a los modelos o la lógica de negocio.
+- **Permisos Personalizados en `permissions.py`:** Para lógicas de autorización complejas o reutilizables, crear un archivo `permissions.py` dentro de la app de Django. Definir clases de permisos personalizadas que hereden de `BasePermission` para verificar si un usuario tiene derecho a ejecutar una acción sobre una vista. Esto mantiene las vistas limpias y la lógica de permisos centralizada.
 
 ## 6. Evolución de Esquemas y Migraciones
 

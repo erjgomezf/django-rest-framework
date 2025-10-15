@@ -32,10 +32,10 @@ class DoctorViewSet(viewsets.ModelViewSet):
         '''
         Cambia el estado de vacaciones del doctor.
         * Parámetros:
-        -   request: Objeto de solicitud HTTP.
-        -   pk: ID del doctor cuyo estado de vacaciones se va a cambiar.
+            -   request: Objeto de solicitud HTTP.
+            -   pk: ID del doctor cuyo estado de vacaciones se va a cambiar.
         * Retorna:
-        -   Response: Objeto de respuesta HTTP con el estado actualizado.
+            -   Response: Objeto de respuesta HTTP con el estado actualizado.
         '''
         doctor = self.get_object()
         doctor.is_on_vacation = True
@@ -47,10 +47,10 @@ class DoctorViewSet(viewsets.ModelViewSet):
         '''
         Cambia el estado de vacaciones del doctor.
         * Parámetros:
-        -   request: Objeto de solicitud HTTP.
-        -   pk: ID del doctor cuyo estado de vacaciones se va a cambiar.
+            -   request: Objeto de solicitud HTTP.
+            -   pk: ID del doctor cuyo estado de vacaciones se va a cambiar.
         * Retorna:
-        -   Response: Objeto de respuesta HTTP con el estado actualizado.
+            -   Response: Objeto de respuesta HTTP con el estado actualizado.
         '''
         doctor = self.get_object()
         doctor.is_on_vacation = False

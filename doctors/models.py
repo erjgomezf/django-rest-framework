@@ -14,6 +14,7 @@ class Doctor(models.Model):
         - address: Dirección del consultorio del doctor.
         - biography: Breve biografía del doctor.
         - specialty: Especialidad médica del doctor.
+        - is_on_vacation: Indica si el doctor está de vacaciones.
     * Métodos:
         - __str__: Retorna una representación legible del doctor.
     '''
