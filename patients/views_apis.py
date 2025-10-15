@@ -124,15 +124,15 @@ def list_patients(request)-> Response:
 def detail_patient(request, pk) -> Response:
     '''
     Recupera, actualiza o elimina un paciente específico por su ID.
-    Métodos soportados:
-    - GET: Devuelve los detalles del paciente.
-    - PUT: Actualiza los detalles del paciente con los datos proporcionados en el cuerpo de la solicitud.
-    - DELETE: Elimina el paciente.
-    Parámetros:
-    - request: Objeto de solicitud HTTP.
-    - pk: ID del paciente a recuperar, actualizar o eliminar.
-    Retorna:
-    - Response: Objeto de respuesta HTTP con los datos solicitados, el resultado de la actualización o la confirmación de eliminación.
+    * Métodos soportados:
+        - GET: Devuelve los detalles del paciente.
+        - PUT: Actualiza los detalles del paciente con los datos proporcionados en el cuerpo de la solicitud.
+        - DELETE: Elimina el paciente.
+    * Parámetros:
+        - request: Objeto de solicitud HTTP.
+        - pk: ID del paciente a recuperar, actualizar o eliminar.
+    * Retorna:
+        - Response: Objeto de respuesta HTTP con los datos solicitados, el resultado de la actualización o la confirmación de eliminación.
     Notas: La actualización requiere que se envíen todos los campos obligatorios.
     '''
     try:
@@ -160,14 +160,14 @@ def detail_patient(request, pk) -> Response:
 class ListPatientsWithListAPIView(ListAPIView, CreateAPIView, DestroyAPIView):
     '''
     Vista basada en clase para listar todos los pacientes.
-    Atributos:
-    - queryset: Conjunto de todos los objetos Patient.
-    - serializer_class: Serializador a utilizar para Patient.
-    - allowed_methods: Métodos HTTP permitidos (GET, POST, DELETE).
-    Métodos:
-    - ListAPIView: Proporciona la funcionalidad para listar objetos.
-    - CreateAPIView: Proporciona la funcionalidad para crear nuevos objetos.
-    - DestroyAPIView: Proporciona la funcionalidad para eliminar objetos.
+    * Atributos:
+        - queryset: Conjunto de todos los objetos Patient.
+        - serializer_class: Serializador a utilizar para Patient.
+        - allowed_methods: Métodos HTTP permitidos (GET, POST, DELETE).
+    * Métodos:
+        - ListAPIView: Proporciona la funcionalidad para listar objetos.
+        - CreateAPIView: Proporciona la funcionalidad para crear nuevos objetos.
+        - DestroyAPIView: Proporciona la funcionalidad para eliminar objetos.
     '''
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer

@@ -5,17 +5,17 @@ class Doctor(models.Model):
     '''
     Modelo que representa a un doctor en el sistema.
     Contiene información personal y profesional relevante.
-    Atributos:
-    - first_name: Nombre del doctor.
-    - last_name: Apellido del doctor.
-    - qualification: Título profesional del doctor.
-    - contact_number: Número de contacto del doctor.
-    - email: Dirección de correo electrónico del doctor.
-    - address: Dirección del consultorio del doctor.
-    - biography: Breve biografía del doctor.
-    - specialty: Especialidad médica del doctor.
-    Métodos:
-    - __str__: Retorna una representación legible del doctor.
+    * Atributos:
+        - first_name: Nombre del doctor.
+        - last_name: Apellido del doctor.
+        - qualification: Título profesional del doctor.
+        - contact_number: Número de contacto del doctor.
+        - email: Dirección de correo electrónico del doctor.
+        - address: Dirección del consultorio del doctor.
+        - biography: Breve biografía del doctor.
+        - specialty: Especialidad médica del doctor.
+    * Métodos:
+        - __str__: Retorna una representación legible del doctor.
     '''
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
@@ -33,11 +33,11 @@ class Doctor(models.Model):
 class Departament(models.Model):
     '''
     Modelo que representa un departamento médico en el sistema.
-    Atributos:
-    - name: Nombre del departamento.
-    - description: Descripción del departamento.
-    Métodos:
-    - __str__: Retorna una representación legible del departamento.
+    * Atributos:
+        - name: Nombre del departamento.
+        - description: Descripción del departamento.
+    * Métodos:
+        - __str__: Retorna una representación legible del departamento.
     '''
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
@@ -48,14 +48,14 @@ class Departament(models.Model):
 class DoctorAvailability(models.Model):
     '''
     Modelo que representa la disponibilidad de un doctor.
-    Atributos:
-    - doctor: Doctor al que pertenece la disponibilidad.
-    - start_date: Fecha de inicio de la disponibilidad.
-    - end_date: Fecha de fin de la disponibilidad.
-    - start_time: Hora de inicio de la disponibilidad.
-    - end_time: Hora de fin de la disponibilidad.
-    Métodos:
-    - __str__: Retorna una representación legible de la disponibilidad.
+    * Atributos:
+        - doctor: Doctor al que pertenece la disponibilidad.
+        - start_date: Fecha de inicio de la disponibilidad.
+        - end_date: Fecha de fin de la disponibilidad.
+        - start_time: Hora de inicio de la disponibilidad.
+        - end_time: Hora de fin de la disponibilidad.
+    * Métodos:
+        - __str__: Retorna una representación legible de la disponibilidad.
     '''
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='availabilities')
     start_date = models.DateField()
@@ -69,12 +69,12 @@ class DoctorAvailability(models.Model):
 class MedicalNote(models.Model):
     '''
     Modelo que representa una nota médica asociada a un doctor.
-    Atributos:
-    - doctor: Doctor al que pertenece la nota médica.
-    - note: Contenido de la nota médica.
-    - created_at: Fecha y hora de creación de la nota médica.
-    Métodos:
-    - __str__: Retorna una representación legible de la nota médica.
+    * Atributos:
+        - doctor: Doctor al que pertenece la nota médica.
+        - note: Contenido de la nota médica.
+        - created_at: Fecha y hora de creación de la nota médica.
+    * Métodos:
+        - __str__: Retorna una representación legible de la nota médica.
     '''
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='medical_notes')
     note = models.TextField()

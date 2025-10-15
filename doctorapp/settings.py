@@ -42,12 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'docs',
-    'patients',
-    'doctors',
-    'bookings',
-    'drf_spectacular',
+    'rest_framework', # Framework para construir APIs RESTful
+    'drf_spectacular', # Herramienta para generar documentación de API
+    'docs', # Aplicación para la documentación de la API
+    'patients', # Aplicación para la gestión de pacientes
+    'doctors', # Aplicación para la gestión de doctores
+    'bookings', # Aplicación para la gestión de reservas
 ]
 
 MIDDLEWARE = [
@@ -141,10 +141,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     # YOUR SETTINGS
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema', # Configuracion de drf-spectacular
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-    ]
+        'rest_framework.authentication.SessionAuthentication', # Autenticacion por session
+    ] 
 }
 
 """
@@ -152,7 +152,7 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly" # Permisos basados en el modelo de Django
     ]
 }
 """

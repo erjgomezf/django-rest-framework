@@ -6,15 +6,15 @@ from patients.models import Patient
 class Appointment(models.Model):
     '''
     Modelo que representa una cita médica en el sistema.
-    Atributos:
-    - patient: Relación con el modelo Patient.
-    - doctor: Relación con el modelo Doctor.
-    - appointment_date: Fecha de la cita.
-    - appointment_time: Hora de la cita.
-    - notes: Notas referentes a la cita.
-    - status: Estado de la cita (programada, completada, cancelada).
-    Métodos:
-    - __str__: Retorna una representación legible de la cita.
+    * Atributos:
+        - patient: Relación con el modelo Patient.
+        - doctor: Relación con el modelo Doctor.
+        - appointment_date: Fecha de la cita.
+        - appointment_time: Hora de la cita.
+        - notes: Notas referentes a la cita.
+        - status: Estado de la cita (programada, completada, cancelada).
+    * Métodos:
+        - __str__: Retorna una representación legible de la cita.
     '''
     STATUS_CHOICES = [
         ('programada', 'Programada'),
@@ -35,12 +35,12 @@ class Appointment(models.Model):
 class MedicalNote(models.Model):
     '''
     Modelo que representa una nota médica asociada a una cita.
-    Atributos:
-    - appointment: Relación con el modelo Appointment.
-    - note: Contenido de la nota médica.
-    - created_at: Fecha y hora de creación de la nota médica.
-    Métodos:
-    - __str__: Retorna una representación legible de la nota médica.
+    * Atributos:
+        - appointment: Relación con el modelo Appointment.
+        - note: Contenido de la nota médica.
+        - created_at: Fecha y hora de creación de la nota médica.
+    * Métodos:
+        - __str__: Retorna una representación legible de la nota médica.
     '''
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='medical_notes')
     note = models.TextField()

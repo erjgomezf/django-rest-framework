@@ -5,11 +5,11 @@ class PatientSerializer(serializers.ModelSerializer):
     '''
     Serializer del modelo Patient.
     Incluye todos los campos del modelo.
-    Atributos:
-    - model: Modelo asociado (Patient).
-    - fields: Campos a incluir en la serialización (todos los campos).
-    Métodos:
-    - Meta: Clase interna que define la configuración del serializer.
+    * Atributos:
+        - model: Modelo asociado (Patient).
+        - fields: Campos a incluir en la serialización (todos los campos).
+    * Métodos:
+        - Meta: Clase interna que define la configuración del serializer.
     '''
     class Meta:
         model = Patient
@@ -19,11 +19,11 @@ class InsuranceSerializer(serializers.ModelSerializer):
     '''
     Serializer del modelo Insurance.
     Incluye todos los campos del modelo.
-    Atributos:
-    - model: Modelo asociado (Insurance).
-    - fields: Campos a incluir en la serialización (todos los campos).
-    Métodos:
-    - Meta: Clase interna que define la configuración del serializer.
+    * Atributos:
+        - model: Modelo asociado (Insurance).
+        - fields: Campos a incluir en la serialización (todos los campos).
+    * Métodos:
+        - Meta: Clase interna que define la configuración del serializer.
     '''
     class Meta:
         model = Insurance
@@ -33,11 +33,11 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
     '''
     Serializer del modelo MedicalRecord.
     Incluye todos los campos del modelo.
-    Atributos:
-    - model: Modelo asociado (MedicalRecord).
-    - fields: Campos a incluir en la serialización (todos los campos).
-    Métodos:
-    - Meta: Clase interna que define la configuración del serializer.
+    * Atributos:
+        - model: Modelo asociado (MedicalRecord).
+        - fields: Campos a incluir en la serialización (todos los campos).
+    * Métodos:
+        - Meta: Clase interna que define la configuración del serializer.
     '''
     class Meta:
         model = MedicalRecord
