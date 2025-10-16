@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Appointment, MedicalNote
+from doctors.models import Doctor
 
 class AppointmentSerializer(serializers.ModelSerializer):
     '''
@@ -11,6 +12,11 @@ class AppointmentSerializer(serializers.ModelSerializer):
     * Métodos:
         - Meta: Clase interna que define la configuración del serializer.
     '''
+    
+    # Asegura que solo se puedan asignar doctores que no estén de vacaciones.
+    doctor = serializers.PrimaryKeyRelatedField(
+        queryset=Doctor.objects.filter(is_on_vacation=False)
+    )
     class Meta:
         model = Appointment
         fields = '__all__'

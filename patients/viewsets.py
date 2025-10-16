@@ -48,7 +48,9 @@ class PatientViewSet(viewsets.ModelViewSet):
         '''
         patient = self.get_object()
         # Obtenemos el serializador a través del método que ya hemos definido
-        serializer = self.get_serializer(data=request.data)
+        # Pasamos el contexto al serializador, lo cual es una buena práctica.
+        # Aunque no se use ahora, es útil para futuras validaciones.
+        serializer = self.get_serializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save(patient=patient)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -69,18 +71,34 @@ class PatientViewSet(viewsets.ModelViewSet):
         serializer = MedicalRecordSerializer(medical_records, many=True)
         return Response(serializer.data)
     
+    # Action personalizado para agregar una nueva cita al paciente
     @action(detail=True, methods=["post"], url_path="add-appointment")
     def add_appointment(self, request, pk) -> Response:
         '''
-        Agrega una nueva cita al paciente.
+        Agrega una nueva cita a un paciente existente.
         * Parámetros:
-            -   request: Objeto de solicitud HTTP que contiene los datos de la cita.
-            -   pk: ID del paciente al que se le agregará la cita.
+            - request: Objeto de solicitud HTTP que contiene los datos de la cita.
+            - pk: ID del paciente al que se le agregará la cita.
         * Retorna:
-            -   Response: Objeto de respuesta HTTP con la cita creada o errores de validación.
+            - Response: Objeto de respuesta HTTP con la cita creada o errores de validación.
         '''
         patient = self.get_object()
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save(patient=patient)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    @action(["GET"], detail=True, url_path="appointments")
+    def get_appointments(self, request, pk) -> Response:
+        '''
+        Recupera las citas asociadas a un paciente específico.
+        * Parámetros:
+            - request: Objeto de solicitud HTTP.
+            - pk: ID del paciente cuyas citas se van a recuperar.
+        * Retorna:
+            - Response: Objeto de respuesta HTTP con los datos de las citas del paciente.
+        '''
+        patient = self.get_object()
+        appointments = patient.appointments.all()
+        serializer = AppointmentSerializer(appointments, many=True)
+        return Response(serializer.data)

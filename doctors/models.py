@@ -9,6 +9,7 @@ class Doctor(models.Model):
         - first_name: Nombre del doctor.
         - last_name: Apellido del doctor.
         - qualification: Título profesional del doctor.
+        - graduation_date: Fecha de graduación del doctor.
         - contact_number: Número de contacto del doctor.
         - email: Dirección de correo electrónico del doctor.
         - address: Dirección del consultorio del doctor.
@@ -26,6 +27,7 @@ class Doctor(models.Model):
     address = models.TextField()
     biography = models.TextField(blank=True)
     specialty = models.CharField(max_length=100)
+    graduation_date = models.DateField(blank=True, null=True)
     is_on_vacation = models.BooleanField(default=False)
 
     def __str__(self):

@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from .models import Doctor, Departament, DoctorAvailability, MedicalNote
 
+from datetime import date
+
+# Create your serializers here.
 class DoctorSerializer(serializers.ModelSerializer):
     '''
     Serializer del modelo Doctor.
@@ -13,9 +16,26 @@ class DoctorSerializer(serializers.ModelSerializer):
         - validate_email: Valida que el correo electrónico tenga un formato correcto.
         - validate: Valida que el número de contacto tenga al menos 10 dígitos si el doctor está de vacaciones.
     '''
+
+    # Campo calculado para los años de experiencia del doctor.
+    experience = serializers.SerializerMethodField()
+
     class Meta:
         model = Doctor
         fields = '__all__'  
+        
+    def get_experience(self, obj) -> int:
+        '''
+        Calcula los años de experiencia del doctor basado en su fecha de graduación.
+        * Parámetros:
+            - obj: Instancia del modelo Doctor.
+        * Retorna:
+            - int: Años de experiencia del doctor.
+        '''
+        if obj.graduation_date:
+            experience_td = date.today() - obj.graduation_date
+            return int(experience_td.days // 365.25)  # Aproximación considerando años bisiestos
+        return 0  # Si no hay fecha de graduación, retorna 0 años de experiencia
         
     def validate_email(self, value)-> str:
         '''
