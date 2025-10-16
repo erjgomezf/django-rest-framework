@@ -7,6 +7,8 @@ from .serializers import DoctorSerializer
 from .models import Doctor
 from .permissions import IsDoctor
 
+from bookings.serializers import AppointmentSerializer
+
 
 # Create your views here.
 
@@ -26,6 +28,12 @@ class DoctorViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsDoctor]
     #permission_classes = [IsAuthenticatedOrReadOnly] # Permite solo a usuarios autenticados crear, actualizar o eliminar
     # permission_classes = [IsAuthenticated] # Permite solo a usuarios autenticados crear, actualizar o eliminar
+    
+    def get_doctor_serializer(self):
+        '''
+        Retorna el serializador apropiado según la acción.
+        '''
+        pass
 
     @action(["POST"], detail=True, url_path="set-on-vacation")
     def set_on_vacation(self, request, pk) -> Response:
@@ -56,3 +64,18 @@ class DoctorViewSet(viewsets.ModelViewSet):
         doctor.is_on_vacation = False
         doctor.save()
         return Response({"status": "El doctor ya no está de vacaciones"})
+    
+    @action(["GET"], detail=True, url_path="appointments")
+    def get_appointments(self, request, pk) -> Response:
+        '''
+        Recupera las citas asociadas a un doctor específico.
+        * Parámetros:
+            - request: Objeto de solicitud HTTP.
+            - pk: ID del doctor cuyas citas se van a recuperar.
+        * Retorna:
+            - Response: Objeto de respuesta HTTP con los datos de las citas del doctor.
+        '''
+        doctor = self.get_object()
+        appointments = doctor.appointments.all()
+        serializer = AppointmentSerializer(appointments, many=True)
+        return Response(serializer.data)

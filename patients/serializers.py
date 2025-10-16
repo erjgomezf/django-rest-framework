@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Patient, Insurance, MedicalRecord
+from bookings.serializers import AppointmentSerializer
+
 
 class PatientSerializer(serializers.ModelSerializer):
     '''
@@ -11,9 +13,23 @@ class PatientSerializer(serializers.ModelSerializer):
     * Métodos:
         - Meta: Clase interna que define la configuración del serializer.
     '''
+    
+    # Incluir detalles de las citas asociadas al historial médico.
+    appointments = AppointmentSerializer(many=True, read_only=True)
+    
     class Meta:
         model = Patient
-        fields = '__all__'
+        fields = [
+            'id',
+            'first_name',
+            'last_name',
+            'date_of_birth',
+            'contact_number',
+            'email',
+            'address',
+            'medical_history',
+            'appointments'
+        ]
 
 class InsuranceSerializer(serializers.ModelSerializer):
     '''
@@ -39,6 +55,7 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
     * Métodos:
         - Meta: Clase interna que define la configuración del serializer.
     '''
+    
     class Meta:
         model = MedicalRecord
         # Definimos explícitamente los campos para tener más control.

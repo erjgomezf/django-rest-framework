@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .serializers import PatientSerializer, MedicalRecordSerializer
+from bookings.serializers import AppointmentSerializer
 from .models import Patient
 
 # Create your views here.
@@ -28,6 +29,8 @@ class PatientViewSet(viewsets.ModelViewSet):
         '''
         if self.action == 'add_medical_record':
             return MedicalRecordSerializer
+        if self.action == 'add_appointment':
+            return AppointmentSerializer
         return super().get_serializer_class() # Retorna el serializador por defecto
 
     #Actions personalizado para agregar un nuevo historial medico
@@ -65,3 +68,19 @@ class PatientViewSet(viewsets.ModelViewSet):
         medical_records = patient.medical_records.all()
         serializer = MedicalRecordSerializer(medical_records, many=True)
         return Response(serializer.data)
+    
+    @action(detail=True, methods=["post"], url_path="add-appointment")
+    def add_appointment(self, request, pk) -> Response:
+        '''
+        Agrega una nueva cita al paciente.
+        * Parámetros:
+            -   request: Objeto de solicitud HTTP que contiene los datos de la cita.
+            -   pk: ID del paciente al que se le agregará la cita.
+        * Retorna:
+            -   Response: Objeto de respuesta HTTP con la cita creada o errores de validación.
+        '''
+        patient = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(patient=patient)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
