@@ -292,7 +292,7 @@ Reglas: usar el código más específico; no envolver respuesta en claves arbitr
 | Campos bool | prefijo `es_` / `tiene_` / adjetivo directo | publicado, es_activo      |
 | Rutas       | plural snake / kebab según contexto         | cursos, cursos-publicados |
 | Funciones   | snake_case descriptivo                      | generar_token_reset       |
-| Tests       | prefijo test\_ + verbo/condición            | test_crea_curso_ok        |
+| Tests       | prefijo test_ + verbo/condición            | test_crea_curso_ok        |
 
 Principio: el nombre debe comunicar intención sin necesitar comentario adicional.
 
@@ -375,7 +375,7 @@ Si el archivo crece demasiado:
 - Mover patrones a `docs/patrones.md`.
 - Mantener este archivo como índice curado.
 
-## Para modularizar: crear carpeta `docs/`, añadir índice al inicio aquí con enlaces relativos y anotar en cada subarchivo fecha de última revisión
+Para modularizar: crear carpeta `docs/`, añadir índice al inicio aquí con enlaces relativos y anotar en cada subarchivo fecha de última revisión
 
 ## Apéndice A: Guía Rápida de Comandos
 
@@ -462,7 +462,7 @@ serializer.save()
 
 ### Postman
 
-> Se puede utilizar postman para verificar la funcionadidad de la Api's, ademas de que puede generar un codigo culs para ejecutar el comando por consola
+> Se puede utilizar postman para verificar la funcionadidad de la Api\'s, ademas de que puede generar un codigo culs para ejecutar el comando por consola
 
 ### Testing
 
@@ -515,3 +515,89 @@ _Referencia rápida para identificar y aplicar soluciones probadas a problemas c
 | **Command**                 | Encapsular una acción en un objeto.                     | Convertir una operación en un objeto portable. |
 | **Observer**                | Notificar a múltiples objetos sobre un cambio.          | Mantener a los objetos sincronizados.          |
 | **Chain of Responsibility** | Pasar una solicitud por una cadena de manejadores.      | Desacoplar quién envía de quién recibe.        |
+
+## 18. Seguridad y Rendimiento
+
+### 18.1. Limitar Peticiones con Throttling
+
+El "throttling" (o limitación de velocidad) es una herramienta crucial para proteger tu API contra ataques de Denegación de Servicio (DoS) y abuso por parte de usuarios que realizan demasiadas peticiones en un corto período de tiempo. Django REST Framework ofrece un sistema de throttling flexible y fácil de configurar.
+
+#### ¿Por qué usar Throttling?
+
+- **Prevenir Abuso:** Evita que un solo usuario (o una IP) sature el servidor con peticiones, ya sea de forma malintencionada o por un error en un script.
+- **Garantizar Disponibilidad:** Asegura que la API siga siendo accesible para todos los usuarios al evitar que un pico de tráfico la sobrecargue.
+- **Controlar el Consumo de Recursos:** Limita el uso de CPU, memoria y ancho de banda.
+
+#### Configuración en Django REST Framework
+
+La forma más común de configurar el throttling es de manera global en tu archivo `settings.py`.
+
+1.  **Define las clases de throttling y los límites:**
+
+    En `settings.py`, dentro del diccionario `REST_FRAMEWORK`, puedes establecer una política de throttling por defecto.
+
+    ```python
+    # doctorapp/settings.py
+
+    REST_FRAMEWORK = {
+        # ... otras configuraciones ...
+
+        'DEFAULT_THROTTLE_CLASSES': [
+            'rest_framework.throttling.AnonRateThrottle',  # Para usuarios anónimos (basado en IP)
+            'rest_framework.throttling.UserRateThrottle'   # Para usuarios autenticados (basado en user ID)
+        ],
+        'DEFAULT_THROTTLE_RATES': {
+            'anon': '100/day',  # Límite para usuarios anónimos
+            'user': '1000/day'  # Límite para usuarios autenticados
+        }
+    }
+    ```
+
+2.  **Personalización por Vista:**
+
+    Si necesitas una política de throttling más específica para una vista en particular, puedes sobreescribir la configuración global directamente en la `APIView` o `ViewSet`.
+
+    ```python
+    # bookings/views.py
+    from rest_framework.throttling import UserRateThrottle
+    from rest_framework.views import APIView
+
+    class VistaEspecial(APIView):
+        throttle_classes = [UserRateThrottle]
+        # Nota: DRF usará el 'DEFAULT_THROTTLE_RATES' para 'user'
+        # a menos que definas una clase de throttle personalizada.
+    ```
+
+#### Tipos de `Throttle`
+
+- **`AnonRateThrottle`**: Limita las peticiones de usuarios no autenticados. Usa la dirección IP para identificar al cliente.
+- **`UserRateThrottle`**: Limita las peticiones de usuarios autenticados. Usa el `user.id` para identificar al cliente.
+- **`ScopedRateThrottle`**: Permite definir límites específicos para ciertas vistas. Requiere que asignes un `throttle_scope` en la vista.
+
+**Ejemplo con `ScopedRateThrottle`:**
+
+```python
+# settings.py
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'contact': '5/hour', # Límite para el scope 'contact'
+        'upload': '10/day',  # Límite para el scope 'upload'
+    }
+}
+
+# views.py
+class ContactoView(APIView):
+    throttle_scope = 'contact'
+    # ...
+
+class SubirArchivoView(APIView):
+    throttle_scope = 'upload'
+    # ...
+```
+
+Al aplicar estas políticas, si un usuario excede el límite de peticiones, recibirá una respuesta `HTTP 429 Too Many Requests` con un mensaje indicando cuándo podrá volver a realizar una petición.
+
+```

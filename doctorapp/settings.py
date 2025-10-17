@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions', # Herramienta para poder visualizar las urls
     'rest_framework', # Framework para construir APIs RESTful
     'drf_spectacular', # Herramienta para generar documentación de API
     'docs', # Aplicación para la documentación de la API
@@ -144,7 +145,15 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema', # Configuracion de drf-spectacular
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication', # Autenticacion por session
-    ] 
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle', # Limitar peticiones de usuarios anonimos
+        'rest_framework.throttling.UserRateThrottle', # Limitar peticiones de usuarios autenticados
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/minute', # Limite de 100 peticiones por minuto para usuarios anonimos
+        'user': '1000/minute' # Limite de 1000 peticiones por minuto para usuarios autenticados
+    }
 }
 
 """
